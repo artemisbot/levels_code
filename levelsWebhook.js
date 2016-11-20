@@ -4,6 +4,7 @@ var request = require('request'),
     Twit =  require('twit');
 
 var prevContent = "";
+var prevContentChal =  "";
 var obj = JSON.parse(fs.readFileSync('login.json', 'utf8'));
 
 var T = new Twit({
@@ -18,7 +19,7 @@ var stream = T.stream('statuses/filter', { follow: ["783437871961272320"] })
 request('https://levels.your-host.xyz/[REDACTED]', function (error, response, body) { // no peeking at this link
     if (!error && response.statusCode == 200) {
         //console.log(body);
-        prevContent = body.substr(0);
+        prevContentChal = body.substr(0);
     }
 });
 
@@ -56,12 +57,12 @@ setInterval(function() {
     //console.log('time')
     request('https://levels.your-host.xyz/[REDACTED]', function (error, response, body) { //no peeking at this link
         if (!error && response.statusCode == 200) {
-            if (body != prevContent) {
+            if (body != prevContentChal) {
                 sendWebhook(obj.idLCCS, obj.authLCCS, '{"username":"Levels Website", "avatar_url": "http://i.imgur.com/14iAwQ1.jpg", "content":"The challenge page has updated! https://levels.your-host.xyz/REDACTED."}');
                 sendWebhook(obj.idGD, obj.authGD, '{"username":"Levels Website", "avatar_url": "http://i.imgur.com/14iAwQ1.jpg", "content":"The challenge page has updated! https://levels.your-host.xyz/REDACTED."}');
                 sendWebhook(obj.idLC, obj.authLC, '{"username":"Levels Website", "avatar_url": "http://i.imgur.com/14iAwQ1.jpg", "content":"The challenge page has updated! https://levels.your-host.xyz/REDACTED."}');
                 T.post('statuses/update', { status: 'The challenge page has updated! https://levels.your-host.xyz/REDACTED.' }, function(err, data, response) {})
-                prevContent = body.substr(0);
+                prevContentChal = body.substr(0);
             }
         }
     });
